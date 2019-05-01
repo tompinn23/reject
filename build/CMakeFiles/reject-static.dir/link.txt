@@ -1,0 +1,2 @@
+/usr/bin/ar qc ../Output/x64/lib/libreject-static.a  CMakeFiles/reject-static.dir/Source/Engine2.cc.o CMakeFiles/reject-static.dir/Source/log.cc.o CMakeFiles/reject-static.dir/Source/file.cc.o
+/usr/bin/ranlib ../Output/x64/lib/libreject-static.a

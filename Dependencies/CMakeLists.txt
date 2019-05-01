@@ -1,0 +1,10 @@
+add_library(lodepng lodepng.cpp)
+target_include_directories(lodepng PUBLIC .)
+
+#add_subdirectory(yaml-cpp)
+add_subdirectory(fmt-5.3.0)
+#add_subdirectory(FastNoise)
+add_subdirectory(SDL2-2.0.9)
+add_subdirectory(sdl-gpu)
+#add_subdirectory(lua-5.3.5)
+#add_subdirectory(sol)

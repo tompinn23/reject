@@ -1,0 +1,42 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/lua-dll.dir/src/lapi.c.o"
+  "CMakeFiles/lua-dll.dir/src/lauxlib.c.o"
+  "CMakeFiles/lua-dll.dir/src/lbaselib.c.o"
+  "CMakeFiles/lua-dll.dir/src/lbitlib.c.o"
+  "CMakeFiles/lua-dll.dir/src/lcode.c.o"
+  "CMakeFiles/lua-dll.dir/src/lcorolib.c.o"
+  "CMakeFiles/lua-dll.dir/src/lctype.c.o"
+  "CMakeFiles/lua-dll.dir/src/ldblib.c.o"
+  "CMakeFiles/lua-dll.dir/src/ldebug.c.o"
+  "CMakeFiles/lua-dll.dir/src/ldo.c.o"
+  "CMakeFiles/lua-dll.dir/src/ldump.c.o"
+  "CMakeFiles/lua-dll.dir/src/lfunc.c.o"
+  "CMakeFiles/lua-dll.dir/src/lgc.c.o"
+  "CMakeFiles/lua-dll.dir/src/linit.c.o"
+  "CMakeFiles/lua-dll.dir/src/liolib.c.o"
+  "CMakeFiles/lua-dll.dir/src/llex.c.o"
+  "CMakeFiles/lua-dll.dir/src/lmathlib.c.o"
+  "CMakeFiles/lua-dll.dir/src/lmem.c.o"
+  "CMakeFiles/lua-dll.dir/src/loadlib.c.o"
+  "CMakeFiles/lua-dll.dir/src/lobject.c.o"
+  "CMakeFiles/lua-dll.dir/src/lopcodes.c.o"
+  "CMakeFiles/lua-dll.dir/src/loslib.c.o"
+  "CMakeFiles/lua-dll.dir/src/lparser.c.o"
+  "CMakeFiles/lua-dll.dir/src/lstate.c.o"
+  "CMakeFiles/lua-dll.dir/src/lstring.c.o"
+  "CMakeFiles/lua-dll.dir/src/lstrlib.c.o"
+  "CMakeFiles/lua-dll.dir/src/ltable.c.o"
+  "CMakeFiles/lua-dll.dir/src/ltablib.c.o"
+  "CMakeFiles/lua-dll.dir/src/ltm.c.o"
+  "CMakeFiles/lua-dll.dir/src/lundump.c.o"
+  "CMakeFiles/lua-dll.dir/src/lvm.c.o"
+  "CMakeFiles/lua-dll.dir/src/lzio.c.o"
+  "CMakeFiles/lua-dll.dir/src/lutf8lib.c.o"
+  "liblua5.3.pdb"
+  "liblua5.3.so"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang C)
+  include(CMakeFiles/lua-dll.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

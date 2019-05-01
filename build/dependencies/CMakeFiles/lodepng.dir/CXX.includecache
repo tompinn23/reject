@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/tom/code/reject/dependencies/lodepng.cpp
+lodepng.h
+/home/tom/code/reject/dependencies/lodepng.h
+limits.h
+-
+stdio.h
+-
+stdlib.h
+-
+
+/home/tom/code/reject/dependencies/lodepng.h
+string.h
+-
+vector
+-
+string
+-
+lodepng.h
+/home/tom/code/reject/dependencies/lodepng.h
+iostream
+-
+lodepng.h
+/home/tom/code/reject/dependencies/lodepng.h
+
