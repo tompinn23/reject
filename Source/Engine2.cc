@@ -1,11 +1,16 @@
-#include "Engine2.h"
+#include "reject.h"
 
 
 #include "lodepng.h"
 #include "log.h"
 
-int Engine::pre_init()
+
+#if defined(REJECT_PUBLIC_BUILD)
+namespace reject {
+#endif
+REJECT_API int Engine::pre_init(bool log_to_con, bool log_to_file)
 {
+
 	// Initialise the SDL Subsystems.
 	log_trace("Attempting to initialise SDL");
 	if (SDL_Init(0) < 0)
@@ -31,7 +36,7 @@ int Engine::pre_init()
 	return 1;
 }
 
-Engine* Engine::make(int width, int height, fs::path data_dir)
+REJECT_API Engine* Engine::make(int width, int height, fs::path data_dir)
 {
 	GPU_Target* renderer;
 	GPU_Image* texture;
@@ -156,21 +161,21 @@ Engine::Engine(int screen_width, int screen_height, int tile_width, int tile_hei
     screen_layer2 = new cell[screen_width * screen_height];
 }
 
-void Engine::putc(int x, int y, int c)
+REJECT_API void Engine::putc(int x, int y, uint8_t c)
 {
    	if ((x < 0 || y < 0) || (x > screen_width || y > screen_height))
 		return;
     putc(x, y, {c, fg_colour, bg_colour});
 }
 
-void Engine::putc(int x, int y, cell c)
+REJECT_API void Engine::putc(int x, int y, cell c)
 {
     if ((x < 0 || y < 0) || (x > screen_width || y > screen_height))
 		return;
     screen[y * screen_width + x] = c;
 }
 
-void Engine::putc(int x, int y, int c1, int c2)
+REJECT_API void Engine::putc(int x, int y, int c1, int c2)
 {
     if ((x < 0 || y < 0) || (x > screen_width || y > screen_height))
 		return;
@@ -181,12 +186,12 @@ void Engine::putc(int x, int y, int c1, int c2)
     putc(x, y, g);
 }
 
-void Engine::putc_combine(int x, int y, int c)
+REJECT_API void Engine::putc_combine(int x, int y, uint8_t c)
 {
     screen_layer2[y * screen_width + x] = {c, fg_colour, 0x00000000};
 }
 
-void Engine::internal_printf(int x, int y, const char* fmt, fmt::printf_args args)
+REJECT_API void Engine::internal_printf(int x, int y, const char* fmt, fmt::printf_args args)
 {
 	std::string str = fmt::vsprintf(fmt, args);
 	if (str.find("[fullsize=true]") == 0)
@@ -209,7 +214,7 @@ void Engine::internal_printf(int x, int y, const char* fmt, fmt::printf_args arg
 	}
 }
 
-void Engine::update()
+REJECT_API void Engine::update()
 {
     for(int idx = 0; idx < screen_width * screen_height; idx++)
     {
@@ -298,14 +303,14 @@ void Engine::update()
     GPU_Flip(renderer);
 }
 
-void Engine::clear()
+REJECT_API void Engine::clear()
 {
     cell c = {32, 0xFFFFFFFF, 0x000000FF};
     std::fill(screen, screen + (screen_width * screen_height), c);
 	std::fill(screen_layer2, screen_layer2 + (screen_width * screen_height), c);
 }
 
-void Engine::clear(uint8_t r, uint8_t g, uint8_t b)
+REJECT_API void Engine::clear(uint8_t r, uint8_t g, uint8_t b)
 {
     uint32_t bg = r << 24 | g << 16 | b << 8 | 0xFF;
     cell c = {32, 0xFFFFFFFF, bg};
@@ -313,7 +318,7 @@ void Engine::clear(uint8_t r, uint8_t g, uint8_t b)
 	std::fill(screen_layer2, screen_layer2 + (screen_width * screen_height), c);
 }
 
-void Engine::clear_rect(int x, int y, int width, int height)
+REJECT_API void Engine::clear_rect(int x, int y, int width, int height)
 {
     cell c = {32, 0xFFFFFFFF, bg_colour};
     for(int i = x; i < x + width; i++)
@@ -322,3 +327,7 @@ void Engine::clear_rect(int x, int y, int width, int height)
         screen[j * screen_width + i] = c;
     }
 }
+
+#if defined(REJECT_PUBLIC_BUILD)
+}
+#endif

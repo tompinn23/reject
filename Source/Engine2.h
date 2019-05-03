@@ -54,10 +54,10 @@ public:
 	 *
 	 * Puts a single character on the screen at a given set of coords.
 	 */
-	void putc(int x, int y, int c);
+	void putc(int x, int y, uint8_t c);
 	void putc(int x, int y, cell c);
 	void putc(int x, int y, int c1, int c2);
-	void putc_combine(int x, int y, int c);
+	void putc_combine(int x, int y, uint8_t c);
 	/*
 	 * Prints a string to the screen using printf formatting.
 	 */
