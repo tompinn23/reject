@@ -15,6 +15,7 @@
 
 #include "fmt/format.h"
 #include "fmt/printf.h"
+#include <functional>
 
 
 #define LOG_VERSION "0.1.0"
@@ -22,7 +23,7 @@
 
 typedef void(*log_LockFn)(void *udata, int lock);
 
-enum { LOG_TRACE, LOG_DEBUG, LOG_INFO, LOG_WARN, LOG_ERROR, LOG_FATAL };
+enum log_level { LOG_TRACE, LOG_DEBUG, LOG_INFO, LOG_WARN, LOG_ERROR, LOG_FATAL };
 #if defined(WIN32) || defined(_WIN32)
 constexpr const char* str_end(const char* str) {
 	return *str ? str_end(str + 1) : str;
@@ -86,11 +87,18 @@ static constexpr cstr past_last_slash(cstr str)
 #define log_error(...) fmt_log_log(LOG_ERROR, file_name(__SHORT_FILE__), __LINE__, __VA_ARGS__)
 #define log_fatal(...) fmt_log_log(LOG_FATAL, file_name(__SHORT_FILE__), __LINE__, __VA_ARGS__)
 
+using Log_Function = std::function<void(int level, const char* file, int line, std::string message)>;
+
 void log_set_udata(void *udata);
 void log_set_lock(log_LockFn fn);
 void log_set_fp(FILE *fp);
 void log_set_level(int level);
 void log_set_quiet(int enable);
+void log_disable();
+void log_enable();
+void log_callback(Log_Function func);
+
+
 
 void log_log(int level, const char *file, int line, const char *fmt, ...);
 void fmt_log(int level, const char* file, int line, const char* format, fmt::printf_args args);

@@ -15,10 +15,10 @@ if(CMAKE_SIZEOF_VOID_P EQUAL 8)
 endif()
 
 option(BUILD_EXAMPLES "Build the examples" ON)
-option(BUILD_STATIC "Build the static versions" ON)
-option(BUILD_SHARED "Build the shared versions" OFF)
+option(BUILD_STATIC "Build the static versions" OFF)
+option(BUILD_SHARED "Build the shared versions" ON)
  
-option(SDL_LINK_STATIC "Link SDL statically" ON)
+option(SDL_LINK_STATIC "Link SDL statically" OFF)
 option(SDL_GPU_SHARED "Link SDL_gpu shared" OFF)
 
 option(REJECT_PUBLIC_BUILD "Reject Public BUild (No DEBUG)" ON)
@@ -49,6 +49,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/Output/${BITS}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/Output/${BITS}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/Output/${BITS}/bin)
 
+message(STATUS "")
 message(STATUS "REJECT OPTIONS")
 message(STATUS "")
 if(BUILD_EXAMPLES)
@@ -91,7 +92,7 @@ set(REJECT_HEADER_LOCATIONS ${CMAKE_SOURCE_DIR}/Include ${CMAKE_SOURCE_DIR}/Sour
 if(BUILD_SHARED)
 	add_library(reject SHARED
 
-		Source/Engine2.cc
+		Source/Engine3.cc
 		Source/log.cc
 		Source/file.cc
 		)
@@ -116,7 +117,7 @@ endif()
 if(BUILD_STATIC)
 	add_library(reject-static STATIC
 
-		Source/Engine2.cc
+		Source/Engine3.cc
 		Source/log.cc
 		Source/file.cc
 		)

@@ -42,6 +42,7 @@ static struct {
 	FILE *fp;
 	int level;
 	int quiet;
+	Log_Function func = NULL;
 } L;
 
 
@@ -66,6 +67,7 @@ static WORD level_colors[] = {
 };
 
 static HANDLE hStdOut = NULL;
+static bool disabled = false;
 #else
 static const char *level_colors[] = {
   "\x1b[94m", "\x1b[36m", "\x1b[32m", "\x1b[33m", "\x1b[31m", "\x1b[35m"
@@ -112,8 +114,25 @@ void log_set_quiet(int enable) {
 	L.quiet = enable ? 1 : 0;
 }
 
+void log_disable()
+{
+	disabled = true;
+}
+
+void log_enable()
+{
+	disabled = false;
+}
+
+void log_callback(Log_Function func)
+{
+	L.func = func;
+}
+
 
 void log_log(int level, const char *file, int line, const char *fmt, ...) {
+	if (disabled)
+		return;
 	if (level < L.level) {
 		return;
 	}
@@ -174,6 +193,8 @@ void log_log(int level, const char *file, int line, const char *fmt, ...) {
 
 
 void fmt_log(int level, const char* file, int line, const char* format, fmt::printf_args args) {
+	if (disabled)
+		return;
 	if (level < L.level)
 		return;
 	lock();
@@ -181,6 +202,13 @@ void fmt_log(int level, const char* file, int line, const char* format, fmt::pri
 	struct tm *lt = localtime(&t);
 	if (!L.quiet)
 	{
+		if (L.func != NULL)
+		{
+			std::string message = fmt::sprintf(format, args);
+			L.func(level, file, line, message);
+			unlock();
+			return;
+		}
 		char buf[16];
 		buf[strftime(buf, sizeof(buf), "%H:%M:%S", lt)] = '\0';
 #if defined(Windows)

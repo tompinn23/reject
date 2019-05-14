@@ -352,7 +352,8 @@ set(SDL_STATIC OFF CACHE BOOL "Build a static version of the library")
 ###########################################
 
 if(SDL_LINK_STATIC)
-	set(SDL_STATIC ON CACHE BOOL "Build Static Version overrided by reject")
+	message(STATUS "OVERRIDING SDL STATIC BUILD: ON")
+	set(SDL_STATIC ON CACHE BOOL "Build Static Version overrided by reject" FORCE)
 endif()
 
 ###########################################

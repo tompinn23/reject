@@ -49,6 +49,7 @@ public:
 	 * Makes a brand new engine.
 	 */
 	static Engine* make(int width, int height, fs::path data_dir);
+	
 	/*
 	 * Putc collection:
 	 *

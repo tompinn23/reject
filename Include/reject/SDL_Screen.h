@@ -28,10 +28,9 @@ namespace fs = std::filesystem;
 # endif
 #endif
 
+#include "reject/Error.h"
 
-#if defined(REJECT_PUBLIC_BUILD)
 namespace reject {
-#endif
 
 	struct cell {
 		uint16_t glyph;
@@ -39,39 +38,21 @@ namespace reject {
 		uint32_t bg_colour;
 	};
 
-	struct internal_cell {
-		uint8_t glyph;
-		uint32_t fg_colour;
-		SDL_Rect src;
-		SDL_Rect dst;
-	};
-
-	struct dimensions {
-		int screen_width;
-		int screen_height;
-		int tile_width;
-		int tile_height;
-		int font_width;
-		int font_height;
-	};
-
-
-	REJECT_API class Engine {
+	class Engine {
 	public:
-		static REJECT_API int pre_init(bool log_to_con = true, bool log_to_file = false);
+		static int pre_init();
 		/*
 		 * Makes a brand new engine.
 		 */
-		static REJECT_API Engine* make(int width, int height, fs::path data_dir);
+		static Engine* make(int width, int height, fs::path data_dir);
 		/*
 		 * Putc collection:
 		 *
 		 * Puts a single character on the screen at a given set of coords.
 		 */
-		REJECT_API void putc(int x, int y, uint8_t c);
-		REJECT_API void putc(int x, int y, cell c);
-		REJECT_API void putc(int x, int y, int c1, int c2);
-		REJECT_API void putc_combine(int x, int y, uint8_t c);
+		void putc(int x, int y, uint8_t c);
+		void putc(int x, int y, cell c);
+		void putc(int x, int y, int c1, int c2);
 		/*
 		 * Prints a string to the screen using printf formatting.
 		 */
@@ -87,30 +68,20 @@ namespace reject {
 		void set_bg(int r, int g, int b) { bg_colour = r << 24 | g << 16 | b << 8 | 0xFF; }
 		void set_bg(int r, int g, int b, int a) { bg_colour = r << 24 | g << 16 | b << 8 | a; }
 
-		REJECT_API void update();
-		REJECT_API void clear();
-		REJECT_API void clear(uint8_t r, uint8_t g, uint8_t b);
-		REJECT_API void clear_rect(int x, int y, int width, int height);
+		void update();
+		void clear();
+		void clear(uint8_t r, uint8_t g, uint8_t b);
+		void clear_rect(int x, int y, int width, int height);
 
 
 		uint32_t fg_colour;
 		uint32_t bg_colour;
 	private:
-		Engine(int screen_width,
-			int screen_height,
-			int tile_width,
-			int tile_height,
-			int font_width,
-			int font_height,
-			GPU_Target* renderer,
-			GPU_Image* texture,
-			GPU_Image* bg,
-			GPU_Rect* tile_clips,
-			GPU_Rect* font_clips,
-			cell* screen);
+		
+		Engine();
 
-		REJECT_API void internal_printf(int x, int y, const char* fmt, fmt::printf_args args);
-
+		void internal_printf(int x, int y, const char* fmt, fmt::printf_args args);
+		bool successful = false;
 		int screen_width;
 		int screen_height;
 		int tile_width;
@@ -118,8 +89,6 @@ namespace reject {
 		int font_width;
 		int font_height;
 
-		cell* screen;
-		cell* screen_layer2;
 
 		GPU_Target* renderer;
 		GPU_Image* texture;
@@ -128,7 +97,4 @@ namespace reject {
 		GPU_Rect* font_clips;
 	};
 
-
-#if defined(REJECT_PUBLIC_BUILD)
 }
-#endif
