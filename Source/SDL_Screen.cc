@@ -1,8 +1,8 @@
-#include "SDL_Screen.h"
+#include "reject/SDL_Screen.h"
 
 
 #include "lodepng.h"
-#include "log.h"
+#include "reject/log.h"
 
 typedef std::vector<unsigned char> bytevec;
 
@@ -26,12 +26,12 @@ namespace reject {
 		}
 
 		if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0) {
-			reject::SetErrorSDL_GetError());
+			reject::SetError(SDL_GetError());
 			return 0;
 		}
 		
 		if (SDL_InitSubSystem(SDL_INIT_EVENTS) < 0) {
-			reject::SetErrorSDL_GetError());
+			reject::SetError(SDL_GetError());
 			return 0;
 		}
 		return 1;
@@ -138,7 +138,7 @@ namespace reject {
 				}
 		}
 		bg = NULL;
-		cell* screen = new cell[width * height];
+		cell* screen = NULL;
 		GPU_Clear(renderer);
 		return new Engine(width,
 			height,
@@ -155,7 +155,7 @@ namespace reject {
 	}
 
 	Engine::Engine(int screen_width, int screen_height, int tile_width, int tile_height, int font_width, int font_height, GPU_Target * renderer, GPU_Image * texture, GPU_Image * bg, GPU_Rect * tile_clips, GPU_Rect * font_clips, cell * screen)
-		: screen_width(screen_width), screen_height(screen_height), tile_width(tile_width), tile_height(tile_height), font_width(font_width), font_height(font_height), renderer(renderer), texture(texture), bg(bg), tile_clips(tile_clips), font_clips(font_clips), screen(screen)
+		: screen_width(screen_width), screen_height(screen_height), tile_width(tile_width), tile_height(tile_height), font_width(font_width), font_height(font_height), renderer(renderer), texture(texture), bg(bg), tile_clips(tile_clips), font_clips(font_clips)
 	{
 		fg_colour = 0xFFFFFFFF;
 		bg_colour = 0x000000FF;
@@ -165,14 +165,14 @@ namespace reject {
 
 #pragma region drawing
 
-	REJECT_API void Engine::putc(int x, int y, uint8_t character)
+	void Engine::putc(int x, int y, uint8_t character)
 	{
 		if ((x < 0 || y < 0) || (x > screen_width || y > screen_height))
 			return;
-		putc(x, y, { c, fg_colour, bg_colour });
+		putc(x, y, { character, fg_colour, bg_colour });
 	}
 
-	REJECT_API void Engine::putc(int x, int y, cell character)
+	void Engine::putc(int x, int y, cell character)
 	{
 		if ((x < 0 || y < 0) || (x > screen_width || y > screen_height))
 			return;
@@ -220,18 +220,18 @@ namespace reject {
 		}
 	}
 
-	REJECT_API void Engine::putc(int x, int y, uint8_t character1, uint8_t character2)
+	void Engine::putc(int x, int y, uint8_t character1, uint8_t character2)
 	{
 		if ((x < 0 || y < 0) || (x > screen_width || y > screen_height))
 			return;
 		cell g;
-		g.glyph = c1 << 8 | c2;
+		g.glyph = character1 << 8 | character2;
 		g.fg_colour = fg_colour;
 		g.bg_colour = bg_colour;
 		putc(x, y, g);
 	}
 
-	REJECT_API void internal_printf(int x, int y, const char* fmt, fmt::printf_args args)
+	void Engine::internal_printf(int x, int y, const char* fmt, fmt::printf_args args)
 	{
 		std::string str = fmt::vsprintf(fmt, args);
 		if (str.find("[fullsize=true]") == 0)
@@ -257,25 +257,26 @@ namespace reject {
 #pragma endregion Drawing functions
 
 #pragma region utility
-	REJECT_API void update()
+	void Engine::update()
 	{
 		GPU_Flip(renderer);
 	}
 
-	REJECT_API void clear()
+	void Engine::clear()
 	{
-		GPU_Clear();
+		GPU_Clear(renderer);
 	}
 
-	REJECT_API void clear(uint8_t r, uint8_t g, uint8_t b)
+	void Engine::clear(uint8_t r, uint8_t g, uint8_t b)
 	{
-		GPU_ClearRGB(r, g, b);
+		GPU_ClearRGB(renderer, r, g, b);
 	}
 
-	REJECT_API void clear(uint32_t colour)
+	void Engine::clear(uint32_t colour)
 	{
-		GPU_ClearRGBA(colour >> 24 & 0xFF, colour >> 16 & 0xFF, colour >> 8 && 0xFF, colour & 0xFF);
+		GPU_ClearRGBA(renderer, colour >> 24 & 0xFF, colour >> 16 & 0xFF, colour >> 8 && 0xFF, colour & 0xFF);
 	}
+
 #pragma endregion Utility Functions
 
 }

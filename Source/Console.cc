@@ -1,12 +1,14 @@
 #include "reject/Console.h"
 
+#include <algorithm>
+
 namespace reject {
 	Console::Console(int width, int height)
 		: width(width), height(height)
 	{
 		for (int l = 0; l < LAYERS_MAX; l++)
 		{
-			layers[l] = new cell[width * height];
+			layers.push_back(new cell[width * height]);
 		}
 	}
 
@@ -24,7 +26,8 @@ namespace reject {
 
 	void Console::clear(uint32_t rgba)
 	{
-		std::fill(layers[layer].begin(), layers[layer].end(), { ' ', 0x00000000, rgba });
+		cell c = {' ', 0x00000000, rgba};
+		std::fill(layers[layer], layers[layer] + width * height, c);
 		dirty_layers[layer] = false;
 	}
 
@@ -35,7 +38,7 @@ namespace reject {
 				layers[layer][x * height + y] = { ' ', 0x00000000, rgba };
 	}
 
-	void Console::internal_printf(int x, int y, format, fmt::printf_args args)
+	void Console::internal_printf(int x, int y, const char* format, fmt::printf_args args)
 	{
 		std::string msg = fmt::vsprintf(format, args);
 		int string_width = msg.size();
@@ -43,10 +46,10 @@ namespace reject {
 		{
 			if ((i + 1) > msg.size())
 			{
-				uint16_t glyph = str[i] << 8 | 32;
-				putc(x + i, y, {glyph, fg_colour, bg_colour })
+				uint16_t glyph = msg[i] << 8 | 32;
+				putc(x + i, y, {glyph, fg_colour, bg_colour });
 			}
-			uint16_t glyph = str[i] << 8 | str[i + 1];
+			uint16_t glyph = msg[i] << 8 | msg[i + 1];
 			putc(x + (i / 2), y, { glyph, fg_colour, bg_colour });
 		}
 	}

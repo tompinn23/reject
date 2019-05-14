@@ -2,11 +2,6 @@
 
 #include <stdint.h>
 
-#include "SDL.h"
-#include "SDL_gpu.h"
-#include "fmt/printf.h"
-#include "SDL_Screen.h"
-
 #if defined(_MSC_VER)
 #include <filesystem>
 namespace fs = std::experimental::filesystem;
@@ -30,4 +25,8 @@ namespace fs = std::filesystem;
 #endif
 
 #define LAYERS_MAX 8
+
+namespace reject {
+    int pre_init();
+ }
 

@@ -5,29 +5,7 @@
 #include "SDL.h"
 #include "SDL_gpu.h"
 #include "fmt/printf.h"
-
-#if defined(_MSC_VER)
-#include <filesystem>
-namespace fs = std::experimental::filesystem;
-#endif
-
-#if defined(__GNUC__)
-#include <filesystem>
-namespace fs = std::filesystem;
-#endif
-
-#ifndef REJECT_API
-# if defined(__WIN32__) || defined(__WINRT__)
-#  define REJECT_API __declspec(dllexport)
-# endif
-#else
-# if defined(__GNUC__) && __GNUC__ >= 4
-#  define REJECT_API __attribute__ ((visibility("default")))
-# else
-#  define REJECT_API
-# endif
-#endif
-
+#include "reject/reject.h"
 #include "reject/Error.h"
 
 namespace reject {
@@ -52,7 +30,7 @@ namespace reject {
 		 */
 		void putc(int x, int y, uint8_t c);
 		void putc(int x, int y, cell c);
-		void putc(int x, int y, int c1, int c2);
+		void putc(int x, int y, uint8_t character1, uint8_t character2);
 		/*
 		 * Prints a string to the screen using printf formatting.
 		 */
@@ -71,6 +49,7 @@ namespace reject {
 		void update();
 		void clear();
 		void clear(uint8_t r, uint8_t g, uint8_t b);
+		void clear(uint32_t rgba);
 		void clear_rect(int x, int y, int width, int height);
 
 
@@ -78,7 +57,18 @@ namespace reject {
 		uint32_t bg_colour;
 	private:
 		
-		Engine();
+		Engine(int screen_width, 
+			int screen_height, 
+			int tile_width, 
+			int tile_height, 
+			int font_width, 
+			int font_height, 
+			GPU_Target * renderer, 
+			GPU_Image * texture, 
+			GPU_Image * bg, 
+			GPU_Rect * tile_clips, 
+			GPU_Rect * font_clips, 
+			cell * screen);
 
 		void internal_printf(int x, int y, const char* fmt, fmt::printf_args args);
 		bool successful = false;

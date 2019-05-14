@@ -34,7 +34,7 @@
 #define Windows
 #endif
 
-#include "log.h"
+#include "reject/log.h"
 
 static struct {
 	void *udata;
@@ -67,12 +67,14 @@ static WORD level_colors[] = {
 };
 
 static HANDLE hStdOut = NULL;
-static bool disabled = false;
 #else
 static const char *level_colors[] = {
   "\x1b[94m", "\x1b[36m", "\x1b[32m", "\x1b[33m", "\x1b[31m", "\x1b[35m"
 };
 #endif
+
+static bool disabled = false;
+
 
 
 
@@ -202,13 +204,6 @@ void fmt_log(int level, const char* file, int line, const char* format, fmt::pri
 	struct tm *lt = localtime(&t);
 	if (!L.quiet)
 	{
-		if (L.func != NULL)
-		{
-			std::string message = fmt::sprintf(format, args);
-			L.func(level, file, line, message);
-			unlock();
-			return;
-		}
 		char buf[16];
 		buf[strftime(buf, sizeof(buf), "%H:%M:%S", lt)] = '\0';
 #if defined(Windows)

@@ -88,14 +88,16 @@ endif()
 
 set(REJECT_HEADER_LOCATIONS ${CMAKE_SOURCE_DIR}/Include ${CMAKE_SOURCE_DIR}/Source ${CMAKE_SOURCE_DIR}/Dependencies/sdl-gpu/include)
 
+set(REJECT_SRC Source/Console.cc
+       	       Source/Error.cc
+	       	   Source/RootConsole.cc
+			   Source/SDL_Screen.cc 
+			   Source/reject.cc  
+	       	   Source/file.cc
+	           Source/log.cc)
 
 if(BUILD_SHARED)
-	add_library(reject SHARED
-
-		Source/Engine3.cc
-		Source/log.cc
-		Source/file.cc
-		)
+	add_library(reject SHARED ${REJECT_SRC})
 	target_include_directories(reject PUBLIC ${REJECT_HEADER_LOCATIONS})
 	target_link_libraries(reject ${SDL_LIBS} ${SDL_GPU_LIB} fmt lodepng )
 
@@ -115,12 +117,7 @@ endif()
 
 
 if(BUILD_STATIC)
-	add_library(reject-static STATIC
-
-		Source/Engine3.cc
-		Source/log.cc
-		Source/file.cc
-		)
+	add_library(reject-static STATIC ${REJECT_SRC})
 	target_include_directories(reject-static PUBLIC ${REJECT_HEADER_LOCATIONS})
 	target_link_libraries(reject-static ${SDL_LIBS} ${SDL_GPU_LIB} fmt lodepng )
 

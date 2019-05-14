@@ -8,6 +8,11 @@ namespace reject {
 		error_message = message;
 	}
 
+	void SetError(char* message)
+	{
+		SetError(std::string(message));
+	}
+
 	std::string GetError()
 	{
 		return error_message;
